@@ -1,14 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Muenzespiel</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h1>Virtueller Münzwurf</h1>
     <div class="coin" id="coin"></div>
     <button onclick="tossCoin()">Münze werfen</button>
     <div class="result" id="result"></div>
+
+    <script>
+        function tossCoin() {
+            const coin = document.getElementById('coin');
+            coin.classList.add('spinning');
+            fetch('/coin_toss')
+                .then(response => response.json())
+                .then(data => {
+                    setTimeout(() => {
+                        coin.classList.remove('spinning');
+                        if (data.result === "Kopf") {
+                            coin.style.backgroundImage = "url('/static/Muenze-Kopf.png')";
+                        } else {
+                            coin.style.backgroundImage = "url('/static/Muenze-Zahl.png')";
+                        }
+                        document.getElementById('result').innerText = `Das Ergebnis des Münzwurfs ist: ${data.result}`;
+                    }, 2000); 
+                })
+                .catch(error => console.error('Fehler:', error));
+        }
+    </script>
 </body>
 </html>
